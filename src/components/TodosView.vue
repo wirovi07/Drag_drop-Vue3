@@ -50,6 +50,17 @@ function handleNewBoard(){
         })
     }
 }
+function startDrag(evt, board, item){
+    evt.dataTransfer.setData('text/plain', JSON.stringify({boardId: board.id, itemId: item.id}))
+}
+function onDrop(evt, dest){
+    const {boardId, itemId} = JSON.parse(evt.dataTransfer.getData("text/plain"))
+    const originBoard = boards.find(item => item.id === boardId)
+    const originItem = originBoard.items.find(item => item.id === itemId)
+
+    dest.item.push({...originItem})
+}
+
 
 </script>
 
@@ -62,11 +73,11 @@ function handleNewBoard(){
 
     <div class="boards-container">
         <div class="boards">
-            <div class="board" v-for="board in boards" :key="board.id">
+            <div class="board" @drop="onDrop($event, board)" @dragover.prevent @dragenter.prevent v-for="board in boards" :key="board.id">
                 <div>{{ board.name}}</div>
                 <InputNew @on-new-item="(text) => handleNewItem(text, board)" />
                 <div class="items">
-                    <div class="item" v-for="item in board.items" :key="item.id">
+                    <div class="item" draggable="true" @dragstart="startDrag(evt, board, item)" v-for="item in board.items" :key="item.id">
                         {{ item.title }}
                     </div>
                 </div>
