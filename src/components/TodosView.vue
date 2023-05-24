@@ -59,6 +59,7 @@ function onDrop(evt, dest){
     const originItem = originBoard.items.find(item => item.id === itemId)
 
     dest.item.push({...originItem})
+    originBoard.items = originBoard.items.filter((item) => item != originItem)
 }
 
 
