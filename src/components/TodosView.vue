@@ -57,9 +57,11 @@ function onDrop(evt, dest){
     const {boardId, itemId} = JSON.parse(evt.dataTransfer.getData("text/plain"))
     const originBoard = boards.find(item => item.id === boardId)
     const originItem = originBoard.items.find(item => item.id === itemId)
+    console.log(originItem, originBoard)
 
-    dest.item.push({...originItem})
+    dest.items.push({...originItem})
     originBoard.items = originBoard.items.filter((item) => item != originItem)
+    console.log("BOARD: "+ originBoard.name, "TITLE: "+originItem.title)
 }
 
 
@@ -78,7 +80,7 @@ function onDrop(evt, dest){
                 <div>{{ board.name}}</div>
                 <InputNew @on-new-item="(text) => handleNewItem(text, board)" />
                 <div class="items">
-                    <div class="item" draggable="true" @dragstart="startDrag(evt, board, item)" v-for="item in board.items" :key="item.id">
+                    <div class="item" draggable="true" @dragstart="startDrag($event, board, item)" v-for="item in board.items" :key="item.id">
                         {{ item.title }}
                     </div>
                 </div>
@@ -89,6 +91,22 @@ function onDrop(evt, dest){
 
 <style scoped>
 
+    nav{
+        background-color: black;
+        margin-bottom: 10px;
+    }
+    nav ul{
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+    }
+    nav ul li a{
+        display: block;
+        padding: 10px;
+        color: white;
+        text-decoration: none;
+    }
     .boards{
         display: flex;
         gap: 10px;
